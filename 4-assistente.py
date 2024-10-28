@@ -13,8 +13,7 @@ chat = ChatGroq(model='llama-3.1-70b-versatile')
 
 def resposta_do_bot(lista_mensagens):
   mensagens_modelo = [('system', 'Você é um assistente de receitas culinárias saudáveis e fáceis, além dos itens, mostre o modo de preparo')]
-  # user_message = [('user', 'Traduza {expressao} para o idioma {idioma}')]
-
+  
   mensagens_modelo += lista_mensagens
 
   template = ChatPromptTemplate.from_messages(
