@@ -3,7 +3,7 @@ from dotenv import load_dotenv
 from langchain_groq import ChatGroq
 from langchain.prompts import ChatPromptTemplate
 import os
-from langchain_community.document_loaders import PyPDFLoader, WebBaseLoader, YoutubeLoader
+from langchain_community.document_loaders import TextLoader, PyPDFLoader, WebBaseLoader, YoutubeLoader
 
 # 1. Carregue as variáveis do arquivo .env
 load_dotenv()
@@ -13,9 +13,11 @@ os.environ['GROQ_API_KEY'] = os.getenv("GROQ_API_KEY")
 chat = ChatGroq(model='llama-3.1-70b-versatile')
 
 def resposta_do_bot(lista_mensagens, documento):
+ 
   mensagem_system = '''
   Você é um assistente inteligente, você utiliza as seguintes informações para suas respostas: {informacoes}
   '''
+ 
   mensagens_modelo = [('system', mensagem_system)]
   
   mensagens_modelo += lista_mensagens
@@ -34,7 +36,7 @@ def carrega_site():
   return documento
 
 def carrega_pdf():
-  caminho = '/content/drive/MyDrive/curso_ia_python/arquivos/RoteiroViagemEgito.pdf'
+  caminho = input('Digite um caminho de um pdf: ')
   loader = PyPDFLoader(caminho)
   lista_documentos = loader.load()
   documento = ''
@@ -51,12 +53,23 @@ def carrega_youtube():
     documento = documento + doc.page_content
   return documento
 
+def carrega_file():
+  caminhoArquivo = input("Digite o caminho do arquivo: ")
+  loader = TextLoader(caminhoArquivo)
+  lista_documentos = loader.load()
+  documento = ''
+  for doc in lista_documentos:
+    documento = documento + doc.page_content
+  return documento
+  
+
 
 print('Bem-vindo ao ChatBot da Robs! Digite "sair" para sair')
 
 texto_selecao = '''Digite 1 se você quiser conversar com um site\n 
 Digite 2 se você quiser conversar com um PDF\n 
-Digite 3 se você quiser conversar com um vídeo do youtubw
+Digite 3 se você quiser conversar com um vídeo do youtube\n
+Digite 4 se quiser inserir um arquivo com texto
 '''
 
 while True:
@@ -69,6 +82,9 @@ while True:
     break
   if selecao == '3':
     documento = carrega_youtube()
+    break
+  if selecao == '4':
+    documento = carrega_file()
     break
   print("Digite um valor entre 1 e 3")
 
