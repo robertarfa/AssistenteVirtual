@@ -20,7 +20,7 @@ loader = YoutubeLoader.from_youtube_url(
 #sempre retorna lista
 lista_documentos = loader.load()
 
-print(lista_documentos[0].page_content)
+# print(lista_documentos[0].page_content)
 
 document = ''
 for doc in lista_documentos:
@@ -35,4 +35,4 @@ template = ChatPromptTemplate.from_messages([
 chain = template | chat
 resposta = chain.invoke({'documentos_informados': document, 'input': 'Quais lições foram aprendidas?'})
 
-print(resposta.content)
+# print(resposta.content)
