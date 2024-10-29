@@ -3,7 +3,7 @@ from dotenv import load_dotenv
 from langchain_groq import ChatGroq
 from langchain.prompts import ChatPromptTemplate
 import os
-from langchain_community.document_loaders import WebBaseLoader
+from langchain_community.document_loaders import YoutubeLoader
 
 # 1. Carregue as variáveis do arquivo .env
 load_dotenv()
@@ -12,12 +12,15 @@ os.environ['GROQ_API_KEY'] = os.getenv("GROQ_API_KEY")
 
 chat = ChatGroq(model='llama-3.1-70b-versatile')
 
-loader = WebBaseLoader("https://www.collabtranslation.com/")
+url = 'https://www.youtube.com/watch?v=1JpYOqvDJNU'
+loader = YoutubeLoader.from_youtube_url(
+  url, 
+  language=['pt'])
 
 #sempre retorna lista
 lista_documentos = loader.load()
 
-# print(lista_documentos[0].page_content)
+print(lista_documentos[0].page_content)
 
 document = ''
 for doc in lista_documentos:
@@ -25,11 +28,11 @@ for doc in lista_documentos:
   # print(document)
 
 template = ChatPromptTemplate.from_messages([
-    ('system', 'Você é um assistente amigável chamado Collab e tem acesso as seguinte informações para dar as suas respostas: {documentos_informados}'),
+    ('system', 'Você é um assistente amigável e tem acesso as seguinte informações para formular suas respostas: {documentos_informados}'),
     ('user', '{input}')
 ])
 
 chain = template | chat
-resposta = chain.invoke({'documentos_informados': document, 'input': 'Quais trabalhos são oferecidos?'})
+resposta = chain.invoke({'documentos_informados': document, 'input': 'Quais lições foram aprendidas?'})
 
 print(resposta.content)
